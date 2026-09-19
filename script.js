@@ -21,6 +21,12 @@ async function getdata() {//async - sycronization function
 getdata();//calling the function getdata()
 async function askAI() {
     const question = document.getElementById("question").value;
+    const answer = document.getElementById("answer");
+    if(question.trim()===""){answer.innerText = "Please enter a question";return;}
+    answer.innerText = "thinking. . ."
+
+    try
+    {
     const response = await fetch("http://localhost:3000/api/ask" ,{
         method: "POST",
         headers:{
@@ -29,6 +35,13 @@ async function askAI() {
         body: JSON.stringify({question:question})
     });
     const data = await response.json();
-    console.log(data);
+    if(!response.ok){answer.innerText ="something went wrong";return;}
+    answer.innerText = data.answer;
+    }
+    catch(error)
+    {
+        console.error(error);
+        answer.innerText="could not connect to the server";
+    }
 }
 askAI();
